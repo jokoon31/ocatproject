@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button, Form } from 'react-bootstrap';
 import { Controller, useForm } from 'react-hook-form';
 import { AssessmentService } from '../../services/AssessmentService';
 
@@ -16,188 +15,227 @@ export const NewAssessment = () => {
   };
 
   return (
-    // <form onSubmit={handleSubmit((data) => console.log(data))}>
-    <Form>
+    // <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
 
       <h1>Cat Assessment Info</h1>
 
-      <br />
+      <div className="form-group">
 
-      <h2> Instrument </h2>
+        <h2> Instrument </h2>
 
-      <div>
+        <div>
 
-        <Form.Label>
+          <label>
 
-          Instrument Type:&nbsp;
+            Instrument Type:&nbsp;
 
-          {/*
+            {/*
           <Controller
-          // name="InstrumentTypeText"
           // control={control}
+          // name="InstrumentTypeText"
           // render={({ field }) =>
           // <input type="text" {...field} />}
           />
           */}
 
-          <Form.Control
-            type="text"
-            name="InstrumentTypeText"
-          />
+            <input className="form-control"
+              type="text"
+              name="InstrumentTypeText"
+            />
 
-        </Form.Label>
-        {errors.InstrumentTypeText && <p> This is a required question </p>}
-      </div>
-
-      <br />
-
-      <h2> Cat Details </h2>
-
-      <div>
-
-        <Form.Label>
-
-          Cat Name:&nbsp;
-
-          <Form.Control
-            type="text"
-          />
-
-        </Form.Label>
-
-        <br /> <br />
-
-        <Form.Label>
-
-          Date of Birth:&nbsp;
-
-          <Form.Control
-            type="date"
-          />
-
-        </Form.Label>
+          </label>
+          {errors.InstrumentTypeText && <p> This is a required question </p>}
+        </div>
 
       </div>
 
-      <br />
+      <div className="form-group">
+
+        <h2> Cat Details </h2>
+
+        <div>
+
+          <label>
+
+            Cat Name:&nbsp;
+
+            <input className="form-control"
+              type="text"
+              name="CatDetails"
+            />
+
+          </label>
+
+        </div>
+
+        <div className="form-group">
+
+          <label>
+
+            Date of Birth:&nbsp;
+
+            <input className="form-control"
+              type="date"
+              name="CatDetails"
+            />
+
+          </label>
+
+        </div>
+
+      </div>
 
       <h2> Questions & Responses </h2>
 
-      <br />
-
       <ol>
-        <li> Previous Contact with the Cat Judicial System </li>
 
-        <br />
-        <Form.Group>
+        <div className="form-group">
 
-          <Form.Check
-            value="No (score = 0)"
-            type="radio"
-            label="No (score = 0)"
-          />
+          <li> Previous Contact with the Cat Judicial System </li>
 
-          <Form.Check
-            value="Yes (score = 1)"
-            type="radio"
-            label="Yes (score = 1)"
-          />
+          <label className="form-control">
 
-        </Form.Group>
+            <input
+              name="PreviousContact"
+              value="No (score = 0)"
+              type="radio"
+              label="No (score = 0)"
+            />
 
-        <br />
+            &nbsp;No (score = 0)
 
-        <li> Physical altercations with other cats </li>
+          </label>
 
-        <br />
+          <label className="form-control control-label">
 
-        <Form.Group>
+            <input
+              name="PreviousContact"
+              value="Yes (score = 1)"
+              type="radio"
+              label="Yes (score = 1)"
+            />
 
-          <Form.Check
-            value="0-3 altercations (score = 0)"
-            type="radio"
-            label="0-3 altercations (score = 0)"
-          />
+            &nbsp;Yes (score = 1)
 
-          <Form.Check
-            value="3+ altercations (score = 1)"
-            type="radio"
-            label="3+ altercations (score = 1"
-          />
+          </label>
 
-        </Form.Group>
+          <li> Physical altercations with other cats </li>
 
-        <br />
+          <label className="form-control control-label">
 
-        <li> Physical altercations with owner (scratching, biting, etc.) </li>
+            <input
+              name="AltercationsWithCats"
+              value="0-3 altercations (score = 0)"
+              type="radio"
+              label="0-3 altercations (score = 0)"
+            />
 
-        <br />
+            &nbsp;0-3 altercations (score = 0)
 
-        <Form.Group>
+          </label>
 
-          <Form.Check
-            value="10+ altercations (score = 1)"
-            type="radio"
-            label="10+ altercations (score = 1)"
-          />
+          <label className="form-control">
 
-          <Form.Check
-            value="0-10 altercations (score = 0)"
-            type="radio"
-            label="0-10 altercations (score = 1)"
-          />
+            <input
+              name="AltercationsWithCats"
+              value="3+ altercations (score = 1)"
+              type="radio"
+              label="3+ altercations (score = 1)"
+            />
 
-        </Form.Group>
+            &nbsp;3+ altercations (score = 1)
 
-        <br />
+          </label>
 
-        <li> Plays well with dogs </li>
+          <li> Physical altercations with owner (scratching, biting, etc.) </li>
 
-        <br />
+          <label className="form-control">
 
-        <Form.Group>
+            <input
+              name="AltercationsWithOwner"
+              value="10+ altercations (score = 1)"
+              type="radio"
+              label="10+ altercations (score = 1)"
+            />
 
-          <Form.Check
-            value="No (score = 1)"
-            type="radio"
-            label="No (score = 1)"
-          />
+            &nbsp;10+ altercations (score = 1)
 
-          <Form.Check
-            value="Yes (score = 0)"
-            type="radio"
-            label="Yes (score = 0)"
-          />
+          </label>
 
-        </Form.Group>
+          <label className="form-control">
 
-        <br />
+            <input
+              name="AltercationsWithOwner"
+              value="0-10 altercations (score = 0)"
+              type="radio"
+              label="0-10 altercations (score = 1)"
+            />
 
-        <li> Hisses at strangers </li>
+            &nbsp;0-10 altercations (score = 0)
 
-        <br />
+          </label>
 
-        <Form.Group>
+          <li> Plays well with dogs </li>
 
-          <Form.Check
-            value="Yes (score = 1)"
-            type="radio"
-            label="Yes (score = 1)"
-          />
+          <label className="form-control">
 
-          <Form.Check
-            value="No (score = 0)"
-            type="radio"
-            label="No (score = 0)"
-          />
+            <input
+              name="PlaysWithDogs"
+              value="No (score = 1)"
+              type="radio"
+              label="No (score = 1)"
+            />
 
-        </Form.Group>
+            &nbsp;No (score = 1)
 
+          </label>
+
+          <label className="form-control">
+
+            <input
+              name="PlaysWithDogs"
+              value="Yes (score = 0)"
+              type="radio"
+              label="Yes (score = 0)"
+            />
+
+            &nbsp;Yes (score = 0)
+
+          </label>
+
+          <li> Hisses at strangers </li>
+
+          <label className="form-control">
+
+            <input
+              name="HissesAtStrangers"
+              value="Yes (score = 1)"
+              type="radio"
+              label="Yes (score = 1)"
+            />
+
+            &nbsp;Yes (score = 1)
+
+          </label>
+
+          <label className="form-control">
+
+            <input
+              name="HissesAtStrangers"
+              value="No (score = 0)"
+              type="radio"
+              label="No (score = 0)"
+            />
+
+            &nbsp;No (score = 0)
+
+          </label>
+
+        </div>
       </ol>
 
-      <br />
-
-      <Button variant="primary" type="submit">Submit</Button>
-    </Form>
+      <button btn="primary" type="submit">Submit</button>
+    </form >
   );
 };

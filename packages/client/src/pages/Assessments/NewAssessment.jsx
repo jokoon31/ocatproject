@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { AssessmentService } from '../../services/AssessmentService';
 
@@ -7,45 +7,79 @@ export const NewAssessment = () => {
   // create a form that utilizes the "onSubmit" function to send data to
   // packages/client/src/services/AssessmentService.js and then onto the packages/api/src/routes/assessment express API
 
-  const errors = {};
-  // const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, reset, watch } = useForm({
+    defaultValues: {
+      altercationsCats: ``,
+      altercationsOwner: ``,
+      catDateOfBirth: ``,
+      catName: ``,
+      hissesStrangers: ``,
+      instrumentType: ``,
+      playsDogs: ``,
+      previousContact: ``,
+      riskLevel: ``,
+      score: ``,
+    },
+  });
+
+  const [ score, setScore ] = useState(0);
+
+  const previousContact = watch(`previousContact`);
+  const altercationsCats = watch(`altercationsCats`);
+  const altercationsOwner = watch(`altercationsOwner`);
+  const playsDogs = watch(`playsDogs`);
+  const hissesStrangers = watch(`hissesStrangers`);
+
+  useEffect(() => {
+    const calcScore = () => {
+      let currentScore = 0;
+
+      if (previousContact === `Yes`) { currentScore += 1; }
+      if (altercationsCats === `3+ altercations`) { currentScore += 1; }
+      if (altercationsOwner === `10+ altercations`) { currentScore += 1; }
+      if (playsDogs === `No`) { currentScore += 1; }
+      if (hissesStrangers === `Yes`) { currentScore += 1; }
+
+      return currentScore;
+    };
+
+    const liveScore = calcScore();
+    setScore(liveScore);
+  }, [ previousContact, altercationsCats, altercationsOwner, playsDogs, hissesStrangers ]);
 
   const onSubmit = async (data) => {
+    console.log(data);
     await AssessmentService.submit(data);
+    setScore(Response.score);
+    reset();
   };
 
   return (
-    // <form onSubmit={handleSubmit(onSubmit)}>
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
 
       <h1>Cat Assessment Info</h1>
+
+      <h5>Risk Score: {score} </h5>
 
       <div className="form-group">
 
         <h2> Instrument </h2>
 
-        <div>
+        <div className="form-check">
 
-          <label>
+          Instrument Type:
 
-            Instrument Type:&nbsp;
-
-            {/*
           <Controller
-          // control={control}
-          // name="InstrumentTypeText"
-          // render={({ field }) =>
-          // <input type="text" {...field} />}
+            control={control}
+            name="instrumentType"
+            render={({ field }) =>
+              <input
+                className="form-control"
+                type="text"
+                {...field}
+              />}
           />
-          */}
 
-            <input className="form-control"
-              type="text"
-              name="InstrumentTypeText"
-            />
-
-          </label>
-          {errors.InstrumentTypeText && <p> This is a required question </p>}
         </div>
 
       </div>
@@ -54,33 +88,37 @@ export const NewAssessment = () => {
 
         <h2> Cat Details </h2>
 
-        <div>
+        <div className="form-check">
 
-          <label>
+          Cat Name:
 
-            Cat Name:&nbsp;
-
-            <input className="form-control"
-              type="text"
-              name="CatDetails"
-            />
-
-          </label>
+          <Controller
+            control={control}
+            name="catName"
+            render={({ field }) =>
+              <input
+                className="form-control"
+                type="text"
+                {...field}
+              />}
+          />
 
         </div>
 
-        <div className="form-group">
+        <div className="form-check">
 
-          <label>
+          Date of Birth:
 
-            Date of Birth:&nbsp;
-
-            <input className="form-control"
-              type="date"
-              name="CatDetails"
-            />
-
-          </label>
+          <Controller
+            control={control}
+            name="catDateOfBirth"
+            render={({ field }) =>
+              <input
+                className="form-control"
+                type="date"
+                {...field}
+              />}
+          />
 
         </div>
 
@@ -90,152 +128,169 @@ export const NewAssessment = () => {
 
       <ol>
 
-        <div className="form-group">
+        <li> Previous Contact with the Cat Judicial System </li>
 
-          <li> Previous Contact with the Cat Judicial System </li>
+        <Controller
+          control={control}
+          name="previousContact"
+          render={({ field }) =>
+            <>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="No (score = 0)"
+                  checked={field.value === `No`}
+                  onChange={() => field.onChange(`No`)}
+                />
+                No (score = 0)
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="Yes"
+                  checked={field.value === `Yes`}
+                  onChange={() => field.onChange(`Yes`)}
+                />
+                Yes (score = 1)
+              </div>
+            </>}
+        />
 
-          <label className="form-control">
+        <li> Physical altercations with other cats </li>
 
-            <input
-              name="PreviousContact"
-              value="No (score = 0)"
-              type="radio"
-              label="No (score = 0)"
-            />
+        <Controller
+          control={control}
+          name="altercationsCats"
+          render={({ field }) =>
+            <>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="0-3 altercations (score = 0)"
+                  checked={field.value === `0-3 altercations`}
+                  onChange={() => field.onChange(`0-3 altercations`)}
+                />
+                0-3 altercations (score = 0)
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="3+ altercations (score = 1)"
+                  checked={field.value === `3+ altercations`}
+                  onChange={() => field.onChange(`3+ altercations`)}
+                />
+                3+ altercations (score = 1)
+              </div>
+            </>}
+        />
 
-            &nbsp;No (score = 0)
+        <li> Physical altercations with owner (scratching, biting, etc.) </li>
 
-          </label>
+        <Controller
+          control={control}
+          name="altercationsOwner"
+          render={({ field }) =>
+            <>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="0-10 altercations (score = 0)"
+                  checked={field.value === `0-10 altercations`}
+                  onChange={() => field.onChange(`0-10 altercations`)}
+                />
+                0-10 altercations (score = 0)
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="10+ altercations (score = 1)"
+                  checked={field.value === `10+ altercations`}
+                  onChange={() => field.onChange(`10+ altercations`)}
+                />
+                10+ altercations (score = 1)
+              </div>
+            </>}
+        />
 
-          <label className="form-control control-label">
+        <li> Plays well with dogs </li>
 
-            <input
-              name="PreviousContact"
-              value="Yes (score = 1)"
-              type="radio"
-              label="Yes (score = 1)"
-            />
+        <Controller
+          control={control}
+          name="playsDogs"
+          render={({ field }) =>
+            <>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="No (score = 1)"
+                  checked={field.value === `No`}
+                  onChange={() => field.onChange(`No`)}
+                />
+                No (score = 1)
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="Yes (score = 0)"
+                  checked={field.value === `Yes`}
+                  onChange={() => field.onChange(`Yes`)}
+                />
+                Yes (score = 0)
+              </div>
+            </>}
+        />
 
-            &nbsp;Yes (score = 1)
+        <li> Hisses at strangers </li>
 
-          </label>
-
-          <li> Physical altercations with other cats </li>
-
-          <label className="form-control control-label">
-
-            <input
-              name="AltercationsWithCats"
-              value="0-3 altercations (score = 0)"
-              type="radio"
-              label="0-3 altercations (score = 0)"
-            />
-
-            &nbsp;0-3 altercations (score = 0)
-
-          </label>
-
-          <label className="form-control">
-
-            <input
-              name="AltercationsWithCats"
-              value="3+ altercations (score = 1)"
-              type="radio"
-              label="3+ altercations (score = 1)"
-            />
-
-            &nbsp;3+ altercations (score = 1)
-
-          </label>
-
-          <li> Physical altercations with owner (scratching, biting, etc.) </li>
-
-          <label className="form-control">
-
-            <input
-              name="AltercationsWithOwner"
-              value="10+ altercations (score = 1)"
-              type="radio"
-              label="10+ altercations (score = 1)"
-            />
-
-            &nbsp;10+ altercations (score = 1)
-
-          </label>
-
-          <label className="form-control">
-
-            <input
-              name="AltercationsWithOwner"
-              value="0-10 altercations (score = 0)"
-              type="radio"
-              label="0-10 altercations (score = 1)"
-            />
-
-            &nbsp;0-10 altercations (score = 0)
-
-          </label>
-
-          <li> Plays well with dogs </li>
-
-          <label className="form-control">
-
-            <input
-              name="PlaysWithDogs"
-              value="No (score = 1)"
-              type="radio"
-              label="No (score = 1)"
-            />
-
-            &nbsp;No (score = 1)
-
-          </label>
-
-          <label className="form-control">
-
-            <input
-              name="PlaysWithDogs"
-              value="Yes (score = 0)"
-              type="radio"
-              label="Yes (score = 0)"
-            />
-
-            &nbsp;Yes (score = 0)
-
-          </label>
-
-          <li> Hisses at strangers </li>
-
-          <label className="form-control">
-
-            <input
-              name="HissesAtStrangers"
-              value="Yes (score = 1)"
-              type="radio"
-              label="Yes (score = 1)"
-            />
-
-            &nbsp;Yes (score = 1)
-
-          </label>
-
-          <label className="form-control">
-
-            <input
-              name="HissesAtStrangers"
-              value="No (score = 0)"
-              type="radio"
-              label="No (score = 0)"
-            />
-
-            &nbsp;No (score = 0)
-
-          </label>
-
-        </div>
+        <Controller
+          control={control}
+          name="hissesStrangers"
+          render={({ field }) =>
+            <>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="No (score = 0)"
+                  checked={field.value === `No`}
+                  onChange={() => field.onChange(`No`)}
+                />
+                No (score = 0)
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="Yes (score = 1)"
+                  checked={field.value === `Yes`}
+                  onChange={() => field.onChange(`Yes`)}
+                />
+                Yes (score = 1)
+              </div>
+            </>}
+        />
       </ol>
 
-      <button btn="primary" type="submit">Submit</button>
-    </form >
+      <div className="form-group">
+
+        <div className="form-check">
+
+          <button className="btn btn-primary" type="submit">
+            Submit
+          </button>
+
+        </div>
+
+      </div>
+
+    </form>
   );
 };

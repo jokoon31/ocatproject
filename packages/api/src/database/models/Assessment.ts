@@ -66,6 +66,7 @@ InferCreationAttributes<Assessment>
       /* eslint-enable sort-keys */
     }, {
       sequelize,
+      tableName: `assessments`,
     });
 
     return Assessment;

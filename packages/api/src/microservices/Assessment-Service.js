@@ -55,7 +55,7 @@ exports.getList = async () => {
 
   try {
     const assessments = await Assessment.findAll();
-    return assessments;
+    return assessments.map(a => a.get({ plain: true }));
   } catch (err) {
     console.log(err);
   }

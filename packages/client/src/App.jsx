@@ -16,6 +16,11 @@ const router = createBrowserRouter([
     path: `/assessment/new`,
   },
 
+  {
+    element: <AssessmentList />,
+    path: `/assessment/list`,
+  },
+
 ]);
 
 const App = () => <SiteWrapper>

@@ -7,7 +7,7 @@ export const NewAssessment = () => {
   // create a form that utilizes the "onSubmit" function to send data to
   // packages/client/src/services/AssessmentService.js and then onto the packages/api/src/routes/assessment express API
 
-  const { control, handleSubmit, reset, watch } = useForm({
+  const { control, formState: { errors }, handleSubmit, register, reset, watch } = useForm({
     defaultValues: {
       altercationsCats: ``,
       altercationsOwner: ``,
@@ -74,11 +74,17 @@ export const NewAssessment = () => {
             name="instrumentType"
             render={({ field }) =>
               <input
+                {...register(`instrumentType`, { required: true })}
+                aria-invalid={errors.instrumentType ? `true` : `false`}
                 className="form-control"
                 type="text"
                 {...field}
               />}
           />
+          {errors.instrumentType &&
+            <p id="instrumentType-error" role="alert" style={{ color: `red` }}>
+              Instrument type is required
+            </p>}
 
         </div>
 
@@ -97,11 +103,17 @@ export const NewAssessment = () => {
             name="catName"
             render={({ field }) =>
               <input
+                {...register(`catName`, { required: true })}
+                aria-invalid={errors.catName ? `true` : `false`}
                 className="form-control"
                 type="text"
                 {...field}
               />}
           />
+          {errors.catName &&
+            <p id="catName-error" role="alert" style={{ color: `red` }}>
+              Cat name is required
+            </p>}
 
         </div>
 
@@ -114,11 +126,17 @@ export const NewAssessment = () => {
             name="catDateOfBirth"
             render={({ field }) =>
               <input
+                {...register(`catDateOfBirth`, { required: true })}
+                aria-invalid={errors.catDateOfBirth ? `true` : `false`}
                 className="form-control"
                 type="date"
                 {...field}
               />}
           />
+          {errors.catDateOfBirth &&
+            <p id="catDateOfBirth-error" role="alert" style={{ color: `red` }}>
+              Date of birth is required
+            </p>}
 
         </div>
 
@@ -133,6 +151,7 @@ export const NewAssessment = () => {
         <Controller
           control={control}
           name="previousContact"
+          rules={{ required: `This is a required question` }}
           render={({ field }) =>
             <>
               <div className="form-check">
@@ -155,6 +174,10 @@ export const NewAssessment = () => {
                 />
                 Yes (score = 1)
               </div>
+              {errors.previousContact &&
+                <p id="previousContact-error" role="alert" style={{ color: `red` }}>
+                  {errors.previousContact.message}
+                </p>}
             </>}
         />
 
@@ -163,6 +186,7 @@ export const NewAssessment = () => {
         <Controller
           control={control}
           name="altercationsCats"
+          rules={{ required: `This is a required question` }}
           render={({ field }) =>
             <>
               <div className="form-check">
@@ -185,6 +209,10 @@ export const NewAssessment = () => {
                 />
                 3+ altercations (score = 1)
               </div>
+              {errors.altercationsCats &&
+                <p id="altercationsCats-error" role="alert" style={{ color: `red` }}>
+                  {errors.altercationsCats.message}
+                </p>}
             </>}
         />
 
@@ -193,6 +221,7 @@ export const NewAssessment = () => {
         <Controller
           control={control}
           name="altercationsOwner"
+          rules={{ required: `This is a required question` }}
           render={({ field }) =>
             <>
               <div className="form-check">
@@ -215,6 +244,10 @@ export const NewAssessment = () => {
                 />
                 10+ altercations (score = 1)
               </div>
+              {errors.altercationsOwner &&
+                <p id="altercationsOwner-error" role="alert" style={{ color: `red` }}>
+                  {errors.altercationsOwner.message}
+                </p>}
             </>}
         />
 
@@ -223,6 +256,7 @@ export const NewAssessment = () => {
         <Controller
           control={control}
           name="playsDogs"
+          rules={{ required: `This is a required question` }}
           render={({ field }) =>
             <>
               <div className="form-check">
@@ -245,6 +279,10 @@ export const NewAssessment = () => {
                 />
                 Yes (score = 0)
               </div>
+              {errors.playsDogs &&
+                <p id="playsDogs-error" role="alert" style={{ color: `red` }}>
+                  {errors.playsDogs.message}
+                </p>}
             </>}
         />
 
@@ -253,6 +291,7 @@ export const NewAssessment = () => {
         <Controller
           control={control}
           name="hissesStrangers"
+          rules={{ required: `This is a required question` }}
           render={({ field }) =>
             <>
               <div className="form-check">
@@ -275,6 +314,10 @@ export const NewAssessment = () => {
                 />
                 Yes (score = 1)
               </div>
+              {errors.hissesStrangers &&
+                <p id="hissesStrangers-error" role="alert" style={{ color: `red` }}>
+                  {errors.hissesStrangers.message}
+                </p>}
             </>}
         />
       </ol>

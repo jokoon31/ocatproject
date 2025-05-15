@@ -13,9 +13,9 @@ function calculateScore(assessment) {
 }
 
 function findRiskLevel(score) {
-  if (score <= 1) { return `Low`; }
-  if (score <= 3) { return `Medium`; }
-  return `High`;
+  if (score === 0 || score === 1) { return `Low`; }
+  if (score === 2 || score === 3) { return `Medium`; }
+  if (score === 4 || score === 5) { return `High`; }
 }
 
 exports.submit = async (assessment) => {

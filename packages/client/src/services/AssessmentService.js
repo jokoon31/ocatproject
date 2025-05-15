@@ -30,4 +30,14 @@ export class AssessmentService {
       throw new Error(`${err.response.statusText} - ${err.response.data.message}`);
     }
   }
+
+  static delete(id) {
+    try {
+      console.log();
+      return Axios.delete(`/assessment/${id}`)
+        .then(response => response.data);
+    } catch (err) {
+      throw new Error(`${err.response.statusText} - ${err.response.data.message}`);
+    }
+  }
 }

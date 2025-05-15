@@ -1,4 +1,4 @@
-table {
+.assessment-table {
   margin-top: 16px;
   width: 100%;
   border: 1px solid #000000;
@@ -12,14 +12,44 @@ th, td {
 
 th {
   background-color: #D3D3D3;
+  cursor: pointer;
+}
+
+th:hover {
+  color: white;
 }
 
 tr:nth-child(even) {
-  background-color: #ADD8E6;
+  background-color: #9cd3e2;
   border: 1px solid #000000;
 }
 
 tr:nth-child(odd) {
   background-color: #D5FFFF;
   border: 1px solid #000000;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.right_buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.left_buttons {
+  display: flex;
+  justify-self: flex-start;
+}
+
+.page_number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-top: -30px;
 }

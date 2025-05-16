@@ -61,3 +61,13 @@ exports.getList = async () => {
   }
 
 };
+
+exports.delete = async (id) => {
+  try {
+    const result = await Assessment.destroy({ where: { id } });
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};

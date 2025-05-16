@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   createColumnHelper,
   flexRender,
+  getColumnFilteredRowModel,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -25,7 +26,9 @@ export const AssessmentList = () => {
       header: `ID`,
     }),
     columnHelper.accessor(`catName`, {
+      enableColumnFilter: true,
       enableSorting: true,
+      filterFn: `includesString`,
       header: `Cat Name`,
     }),
     columnHelper.accessor(`catDateOfBirth`, {
@@ -41,7 +44,9 @@ export const AssessmentList = () => {
       header: `Score`,
     }),
     columnHelper.accessor(`riskLevel`, {
+      enableColumnFilter: true,
       enableSorting: true,
+      filterFn: `equalsString`,
       header: `Risk Level`,
       sortingFn: (rowA, rowB, columnId) => {
         const orderRiskLevel = {
@@ -60,12 +65,14 @@ export const AssessmentList = () => {
 
     }),
     columnHelper.accessor(`createdAt`, {
+      enableColumnFilter: true,
       enableSorting: true,
+      filterFn: `includesString`,
       header: `Created On`,
       // eslint-disable-next-line sort-keys
       cell: info => {
         const value = info.getValue();
-        return value ? new Date(value).toLocaleDateString() : ``;
+        return value ? String(value).split(`T`)[0] : ``;
       },
     }),
     columnHelper.accessor(`updatedAt`, {
@@ -74,13 +81,13 @@ export const AssessmentList = () => {
       // eslint-disable-next-line sort-keys
       cell: info => {
         const value = info.getValue();
-        return value ? new Date(value).toLocaleDateString() : ``;
+        return value ? String(value).split(`T`)[0] : ``;
       },
     }),
     columnHelper.display({
       id: `actions`,
       // eslint-disable-next-line sort-keys
-      header: `Actions`,
+      header: ``,
       // eslint-disable-next-line sort-keys
       cell: ({ row }) =>
         <Button
@@ -106,10 +113,13 @@ export const AssessmentList = () => {
 
   const [ globalFilter, setGlobalFilter ] = useState(``);
 
+  const [ columnFilters, setColumnFilters ] = useState([]);
+
   const table = useReactTable({
     columns,
     data: assessments,
     state: {
+      columnFilters,
       globalFilter,
     },
     // eslint-disable-next-line sort-keys
@@ -118,6 +128,7 @@ export const AssessmentList = () => {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     globalFilterFn: `includesString`,
+    onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
   });
 
@@ -138,21 +149,49 @@ export const AssessmentList = () => {
     <div>
       <h2 style={{ textAlign: `center` }}>Assessment List</h2>
 
-      <input
-        type="text"
-        placeholder="Search..."
-        value={globalFilter ?? ``}
-        onChange={e => setGlobalFilter(e.target.value)}
-      />
+      <div className="column_filters">
 
-      &nbsp;
+        <input
+          type="text"
+          placeholder="Search name..."
+          value={table.getColumn(`catName`)?.getFilterValue() ?? ``}
+          onChange={e => table.getColumn(`catName`)?.setFilterValue(e.target.value)}
+        />
 
-      <input
-        type="date"
-        placeholder="mm,dd,yyyy"
-        value={globalFilter ?? ``}
-        onChange={e => setGlobalFilter(e.target.value)}
-      />
+        <div className="filter_item">
+          <label htmlFor="birthDateFilter">DOB: &nbsp; </label>
+          <input
+            type="date"
+            placeholder="Birth Date"
+            value={table.getColumn(`catDateOfBirth`)?.getFilterValue() ?? ``}
+            onChange={e =>
+              table.getColumn(`catDateOfBirth`)?.setFilterValue(e.target.value)}
+          />
+        </div>
+
+        <select
+          value={table.getColumn(`riskLevel`)?.getFilterValue() ?? ``}
+          onChange={e =>
+            table.getColumn(`riskLevel`)?.setFilterValue(e.target.value)}
+        >
+          <option value="">All Risk Levels</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+
+        <div className="filter_item">
+          <label htmlFor="createdOnFilter">Created on: &nbsp; </label>
+          <input
+            type="date"
+            placeholder="Created On"
+            value={table.getColumn(`createdAt`)?.getFilterValue() ?? ``}
+            onChange={e =>
+              table.getColumn(`createdAt`)?.setFilterValue(e.target.value)}
+          />
+        </div>
+
+      </div>
 
       <table className="assessment-table">
         <thead>

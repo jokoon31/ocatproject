@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   createColumnHelper,
   flexRender,
-  getColumnFilteredRowModel,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
